@@ -5,6 +5,7 @@ import { Server } from "http";
 import { DBConfig } from "./config";
 import { DB_URL } from "./config/secrets.config";
 import { routes } from "./routes";
+import { centralErrorHandler } from "./middleware";
 
 class App {
   public app: Express;
@@ -16,6 +17,7 @@ class App {
     this.connectDB();
     this.initializeMiddleware();
     this.initializeRoutes();
+    this.initializeCentralErrorMiddleware();
   }
 
   private initializeMiddleware() {
@@ -34,6 +36,13 @@ class App {
 
   private initializeRoutes() {
     this.app.use("/api", routes.router);
+  }
+
+  private initializeCentralErrorMiddleware() {
+    this.app.use(
+      centralErrorHandler.handle404Error,
+      centralErrorHandler.handle404OrServerError
+    );
   }
 
   public listenToPort(port: string | number, node_env: string): Server {

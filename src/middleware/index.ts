@@ -1,0 +1,1 @@
+export { centralErrorHandler } from "./error.middleware";
