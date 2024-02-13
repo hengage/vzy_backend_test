@@ -14,7 +14,7 @@ const authMiddleware = async (
 
     if (!token) {
       return res
-        .status(HTTP_STATUS_CODES.BAD_REQUEST)
+        .status(HTTP_STATUS_CODES.UNAUTHORIZED)
         .json({ message: "Token not provided" });
     }
 
@@ -23,7 +23,7 @@ const authMiddleware = async (
       (req as any).user = decoded;
       next();
     } catch (error: any) {
-      return res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({ message: error.message });
+      return res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({ message: error.message });
     }
   };
 

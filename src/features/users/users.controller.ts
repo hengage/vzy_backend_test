@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
+
 import { generateJWTToken, handleErrorResponse } from "../../utils";
-import { loginRepo, userRegistrationRepo } from "./users.repo";
+import {
+  loginRepo,
+  updateProfileRepo,
+  userRegistrationRepo,
+} from "./users.repo";
 import { HTTP_STATUS_CODES } from "../../constants";
 import { checkEmailIsTaken, checkPhoneNumberIsTaken } from "./users.service";
 import { validateLogin, validateRegistration } from "./users.validation";
@@ -30,7 +35,7 @@ const loginController = async (req: Request, res: Response) => {
 
     const user = await loginRepo(req.body);
     const jwtPayload = { _id: user._id };
-    const accessToken = generateJWTToken(jwtPayload, "1m");
+    const accessToken = generateJWTToken(jwtPayload, "1h");
 
     res.status(HTTP_STATUS_CODES.OK).json({
       success: true,
@@ -41,4 +46,17 @@ const loginController = async (req: Request, res: Response) => {
   }
 };
 
-export { userRegistrationController, loginController };
+const updateProfileController = async (req: Request, res: Response) => {
+  const userId = (req as any).user._id;
+  try {
+    const user = await updateProfileRepo(userId, req.body);
+    res.status(HTTP_STATUS_CODES.OK).json({
+      success: true,
+      data: { user },
+    });
+  } catch (error: any) {
+    handleErrorResponse(res, false, error);
+  }
+};
+
+export { userRegistrationController, loginController, updateProfileController };
