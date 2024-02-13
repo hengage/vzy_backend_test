@@ -4,6 +4,7 @@ import { Server } from "http";
 
 import { DBConfig } from "./config";
 import { DB_URL } from "./config/secrets.config";
+import { routes } from "./routes";
 
 class App {
   public app: Express;
@@ -14,6 +15,7 @@ class App {
 
     this.connectDB();
     this.initializeMiddleware();
+    this.initializeRoutes();
   }
 
   private initializeMiddleware() {
@@ -29,6 +31,10 @@ class App {
       console.error(error);
     }
   };
+
+  private initializeRoutes() {
+    this.app.use("/api", routes.router);
+  }
 
   public listenToPort(port: string | number, node_env: string): Server {
     return this.app.listen(`${port}`, () => {

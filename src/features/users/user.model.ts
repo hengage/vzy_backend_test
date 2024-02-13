@@ -10,9 +10,22 @@ const userSchema = new Schema<IUserDocument>(
       required: true,
       set: toLowerCaseSetter,
     },
-    lastName: { type: String, required: true, set: toLowerCaseSetter },
-    phoneNumber: { type: String, required: true },
-    email: { type: String, required: true, set: toLowerCaseSetter },
+    lastName: {
+      type: String,
+      required: true,
+      set: toLowerCaseSetter,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      set: toLowerCaseSetter,
+    },
     password: { type: String, required: true },
     paymentStatus: {
       type: String,
