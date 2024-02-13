@@ -26,4 +26,9 @@ const checkPhoneNumberIsTaken = async (phoneNumber: string) => {
   }
 };
 
-export { checkEmailIsTaken, checkPhoneNumberIsTaken };
+const getStripeId = async (userId: string) => {
+  const user = await User.findById(userId).select("stripeId").lean();
+  return user;
+};
+
+export { checkEmailIsTaken, checkPhoneNumberIsTaken, getStripeId };

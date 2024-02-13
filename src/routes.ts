@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { usersRoutes } from "./features/users";
+import { paymentsRoutes } from "./features/payments";
 
 class Routes {
     public router = Router();
@@ -10,6 +11,7 @@ class Routes {
 
     private initializeRoutes() {
         this.router.use("/users", usersRoutes.router)
+        this.router.use("/payments", paymentsRoutes.router)
     }
 }
 
