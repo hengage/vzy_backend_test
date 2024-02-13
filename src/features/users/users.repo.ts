@@ -1,6 +1,8 @@
 import { HTTP_STATUS_CODES } from "../../constants";
 import { HandleException } from "../../handleException";
+import { emitEvent } from "../../services";
 import { compareValues } from "../../utils";
+import { paymentsService } from "../payments";
 import { User } from "./user.model";
 import { IRegisterUser, IUserDocument } from "./users.interface";
 
@@ -14,6 +16,15 @@ const userRegistrationRepo = async (payload: IRegisterUser) => {
     email,
     password,
   });
+
+
+  // Asynchronous creation of customer on stripe
+  emitEvent("create-stripe-customer", {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    _id: user.id,
+  })
 
   return {
     firstName: user.firstName,
@@ -61,4 +72,13 @@ const updateProfileRepo = async (
   return user;
 };
 
-export { userRegistrationRepo, loginRepo, updateProfileRepo };
+const addStripeId = async (customerId: string) => {
+  const user = await User.findOne();
+  if (!user) {
+    throw new HandleException(HTTP_STATUS_CODES.NOT_FOUND, "No user found");
+  }
+  user.stripeId = customerId;
+  await user.save();
+};
+
+export { userRegistrationRepo, loginRepo, updateProfileRepo, addStripeId };

@@ -27,6 +27,7 @@ const userSchema = new Schema<IUserDocument>(
       set: toLowerCaseSetter,
     },
     password: { type: String, required: true },
+    stripeId: {type: String, unique: true},
     paymentStatus: {
       type: String,
       enum: Object.values(USER_PAYMENT_STATUS),

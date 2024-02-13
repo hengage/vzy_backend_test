@@ -8,6 +8,7 @@ export interface IUserDocument extends Document {
     phoneNumber: string;
     password: string;
     email: string;
+    stripeId: string;
     paymentStatus: USER_PAYMENT_STATUS;
     accountStatus: USER_ACCOUNT_STATUS;
 }
