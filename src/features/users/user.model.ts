@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { IUserDocument } from "./users.interface";
 import { USER_ACCOUNT_STATUS, USER_PAYMENT_STATUS } from "../../constants";
-import { encryptValue, toLowerCaseSetter } from "../../utils";
+import {  encryptValue, toLowerCaseSetter } from "../../utils";
 
 const userSchema = new Schema<IUserDocument>(
   {
@@ -50,5 +50,6 @@ userSchema.pre("save", async function (next) {
     }
   }
 });
+
 
 export const User = model<IUserDocument>("User", userSchema);

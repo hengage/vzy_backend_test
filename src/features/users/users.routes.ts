@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { userRegistrationController } from "./users.controller";
+import {
+  loginController,
+  userRegistrationController,
+} from "./users.controller";
 
 class UsersRoutes {
   public router = Router();
@@ -10,6 +13,7 @@ class UsersRoutes {
 
   private initializeRoutes() {
     this.router.post(`/`, userRegistrationController);
+    this.router.post("/login", loginController);
   }
 }
 

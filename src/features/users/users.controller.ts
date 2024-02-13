@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { handleErrorResponse } from "../../utils";
-import { userRegistrationRepo } from "./users.repo";
+import { generateJWTToken, handleErrorResponse } from "../../utils";
+import { loginRepo, userRegistrationRepo } from "./users.repo";
 import { HTTP_STATUS_CODES } from "../../constants";
 import { checkEmailIsTaken, checkPhoneNumberIsTaken } from "./users.service";
-import { validateRegistration } from "./users.validation";
+import { validateLogin, validateRegistration } from "./users.validation";
 
 const userRegistrationController = async (req: Request, res: Response) => {
   try {
-    await validateRegistration(req.body)
+    await validateRegistration(req.body);
 
     await Promise.all([
       checkPhoneNumberIsTaken(req.body.phoneNumber),
@@ -24,4 +24,21 @@ const userRegistrationController = async (req: Request, res: Response) => {
   }
 };
 
-export { userRegistrationController };
+const loginController = async (req: Request, res: Response) => {
+  try {
+    await validateLogin(req.body);
+
+    const user = await loginRepo(req.body);
+    const jwtPayload = { _id: user._id };
+    const accessToken = generateJWTToken(jwtPayload, "1m");
+
+    res.status(HTTP_STATUS_CODES.OK).json({
+      success: true,
+      data: { user, accessToken },
+    });
+  } catch (error: any) {
+    handleErrorResponse(res, false, error);
+  }
+};
+
+export { userRegistrationController, loginController };
