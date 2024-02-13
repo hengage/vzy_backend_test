@@ -11,3 +11,11 @@ export interface IUserDocument extends Document {
     paymentStatus: USER_PAYMENT_STATUS;
     accountStatus: USER_ACCOUNT_STATUS;
 }
+
+export interface IRegisterUser {
+    firstName: string;  
+    lastName: string;
+    phoneNumber: string;
+    password: string;
+    email: string;
+}
