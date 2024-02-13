@@ -40,4 +40,23 @@ const validateLogin = async (payload: { email: string; password: string }) => {
   return;
 };
 
-export { validateRegistration, validateLogin };
+const validateUpdateProfile = async (payload: IRegisterUser) => {
+  const schema = joi.object({
+    firstName: joi.string().label("First name"),
+    lastName: joi.string().label("Last name"),
+    phoneNumber: joi.string().label("Phone number"),
+    email: joi.string().email().label("Email"),
+  });
+
+  const { error } = schema.validate(payload, {
+    allowUnknown: false,
+    abortEarly: false,
+  });
+
+  if (error) {
+    throw new HandleException(HTTP_STATUS_CODES.BAD_REQUEST, error.message);
+  }
+  return;
+};
+
+export { validateRegistration, validateLogin, validateUpdateProfile };

@@ -8,7 +8,11 @@ import {
 } from "./users.repo";
 import { HTTP_STATUS_CODES } from "../../constants";
 import { checkEmailIsTaken, checkPhoneNumberIsTaken } from "./users.service";
-import { validateLogin, validateRegistration } from "./users.validation";
+import {
+  validateLogin,
+  validateRegistration,
+  validateUpdateProfile,
+} from "./users.validation";
 
 const userRegistrationController = async (req: Request, res: Response) => {
   try {
@@ -49,6 +53,8 @@ const loginController = async (req: Request, res: Response) => {
 const updateProfileController = async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
   try {
+    await validateUpdateProfile(req.body);
+
     const user = await updateProfileRepo(userId, req.body);
     res.status(HTTP_STATUS_CODES.OK).json({
       success: true,
