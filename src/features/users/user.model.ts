@@ -1,16 +1,18 @@
 import { Schema, model } from "mongoose";
 import { IUserDocument } from "./users.interface";
 import { USER_ACCOUNT_STATUS, USER_PAYMENT_STATUS } from "../../constants";
+import { encryptValue, toLowerCaseSetter } from "../../utils";
 
 const userSchema = new Schema<IUserDocument>(
   {
     firstName: {
       type: String,
       required: true,
+      set: toLowerCaseSetter,
     },
-    lastName: { type: String, required: true },
+    lastName: { type: String, required: true, set: toLowerCaseSetter },
     phoneNumber: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, set: toLowerCaseSetter },
     password: { type: String, required: true },
     paymentStatus: {
       type: String,
@@ -25,5 +27,15 @@ const userSchema = new Schema<IUserDocument>(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    try {
+      this.password = await encryptValue(this.password);
+    } catch (error: any) {
+      return next(error);
+    }
+  }
+});
 
 export const User = model<IUserDocument>("User", userSchema);
