@@ -13,6 +13,12 @@ class App {
     this.dbConfig = new DBConfig(`${DB_URL}`);
 
     this.connectDB();
+    this.initializeMiddleware();
+  }
+
+  private initializeMiddleware() {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
   }
 
   private connectDB = async () => {
