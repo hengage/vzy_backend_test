@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 
 import { authMiddleware } from "../../middleware";
 import { createPaymentsIntentController } from "./payments.controller";
@@ -12,11 +12,16 @@ class PaymentsRoutes {
   }
 
   private initializeRoutes() {
-    this.router.post(`/webhook`, stripeWebhook);
+    this.router.route(`/webhook`).post(stripeWebhook);
 
     this.router.use(authMiddleware);
 
-    this.router.post(`/payment-intent`, createPaymentsIntentController);
+    this.router
+      .route(`/payment-intent`)
+      .post(
+        express.json({ type: "application/json" }),
+        createPaymentsIntentController
+      );
   }
 }
 

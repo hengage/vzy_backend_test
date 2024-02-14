@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Stripe } from "stripe";
 import { HTTP_STATUS_CODES } from "../../constants";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "../../config";
+import { updatePaymentStatus } from "../users";
 
 const stripeWebhook = async (req: Request, res: Response) => {
   const stripe = new Stripe(`${STRIPE_SECRET_KEY}`);
@@ -27,6 +28,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object;
         console.log("Payment succesful", paymentIntent);
+        // await updatePaymentStatus()s
         // Fulfill the order
         break;
       case "payment_intent.payment_failed":

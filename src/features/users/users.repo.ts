@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODES } from "../../constants";
+import { HTTP_STATUS_CODES, USER_PAYMENT_STATUS } from "../../constants";
 import { HandleException } from "../../handleException";
 import { emitEvent } from "../../services";
 import { compareValues } from "../../utils";
@@ -17,14 +17,13 @@ const userRegistrationRepo = async (payload: IRegisterUser) => {
     password,
   });
 
-
   // Asynchronous creation of customer on stripe
   emitEvent("create-stripe-customer", {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
     _id: user.id,
-  })
+  });
 
   return {
     firstName: user.firstName,
@@ -81,4 +80,21 @@ const addStripeId = async (customerId: string) => {
   await user.save();
 };
 
-export { userRegistrationRepo, loginRepo, updateProfileRepo, addStripeId };
+const updatePaymentStatus = async (userId: string) => {
+  const user = await User.findOneAndUpdate({stripeId:userId},
+    {
+      paymentStatus: USER_PAYMENT_STATUS.PAID,
+    },
+    { new: true }
+  ).select("paymentStatus");
+
+  console.log("Updated user payment status", user);
+};
+
+export {
+  userRegistrationRepo,
+  loginRepo,
+  updateProfileRepo,
+  addStripeId,
+  updatePaymentStatus,
+};
