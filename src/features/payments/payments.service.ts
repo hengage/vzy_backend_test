@@ -24,8 +24,8 @@ class PaymentsService {
   }
 
   private async createPaymentMethod(card: ICardPaymentMethod) {
-    /* Cannot directly send card numbers  to the Stripe but i'll levave this here 
-    as reference.
+    /* Cannot directly send card numbers  to the Stripe API but i'll leave this here 
+    as a reference.
     The recommended way to create payment method using card is to do it 
     on the client-side, for the purpose of being PCI compliant
     */
@@ -37,7 +37,7 @@ class PaymentsService {
     return paymentMethod;
   }
 
-  public async createPaymentIntent(userId: string, amount: number, card: any) {
+  public async createPaymentIntent(userId: string, amount: number, description: string) {
     console.log({ amount });
     try {
       const user = await getStripeId(userId);
@@ -48,11 +48,13 @@ class PaymentsService {
        https://stripe.com/docs/testing
        https://support.stripe.com/questions/enabling-access-to-raw-card-data-apis
        */
+
+       
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: amount * 100,
         currency: "usd",
         customer: user?.stripeId,
-        description: "Payment for your product/service",
+        description,
         payment_method: "pm_card_visa",
         automatic_payment_methods: {
           allow_redirects: "never",

@@ -10,7 +10,7 @@ const createPaymentsIntentController = async (req: Request, res: Response) => {
     const paymentIntent = await paymentsService.createPaymentIntent(
       userId,
       req.body.amount,
-      req.body.card
+      req.body.description
     );
     res.status(HTTP_STATUS_CODES.CREATED).json({
       success: true,
