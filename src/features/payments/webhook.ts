@@ -8,9 +8,10 @@ const stripeWebhook = async (req: Request, res: Response) => {
   const stripe = new Stripe(`${STRIPE_SECRET_KEY}`);
   const endpointSecret = `${STRIPE_WEBHOOK_SECRET}`;
 
-  const sig = req.headers["stripe-signature"];
+  
+  const signature = req.headers["stripe-signature"];
 
-  if (typeof sig !== "string") {
+  if (typeof signature !== "string") {
     console.error("Invalid Stripe Signature");
     return res
       .status(HTTP_STATUS_CODES.BAD_REQUEST)
@@ -19,15 +20,15 @@ const stripeWebhook = async (req: Request, res: Response) => {
   let event;
 
   try {
-    if (!sig) {
+    if (!signature) {
       console.error();
     }
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-
+    event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+    console.log({ event, signature });
     switch (event.type) {
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object;
-        console.log("Payment succesful", paymentIntent);
+        console.log("Payment succesful", {paymentIntent});
         // await updatePaymentStatus()s
         // Fulfill the order
         break;
@@ -40,6 +41,7 @@ const stripeWebhook = async (req: Request, res: Response) => {
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
+    return res.status(HTTP_STATUS_CODES.OK).json({received: true});
   } catch (error: any) {
     console.error("Webhook Error:", error.message);
     // This would normally be sent to a log in real scenario

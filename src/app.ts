@@ -6,6 +6,7 @@ import { DBConfig } from "./config";
 import { DB_URL } from "./config/secrets.config";
 import { routes } from "./routes";
 import { centralErrorHandler } from "./middleware";
+import { webHookRoutes } from "./features/payments";
 
 class App {
   public app: Express;
@@ -15,6 +16,7 @@ class App {
     this.dbConfig = new DBConfig(`${DB_URL}`);
 
     this.connectDB();
+    this.stripeWebHookRoutes();
     this.initializeMiddleware();
     this.initializeRoutes();
     this.initializeCentralErrorMiddleware();
@@ -33,6 +35,13 @@ class App {
       console.error(error);
     }
   };
+
+  private stripeWebHookRoutes() {
+    /*Separate routes for webhook as stripe needs to send the req body as 
+    a raw string or buffer
+    */
+    this.app.use("/stripe/webhook", webHookRoutes.router);
+  }
 
   private initializeRoutes() {
     this.app.use("/api", routes.router);
