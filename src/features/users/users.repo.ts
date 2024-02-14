@@ -80,8 +80,9 @@ const addStripeId = async (customerId: string) => {
   await user.save();
 };
 
-const updatePaymentStatus = async (userId: string) => {
-  const user = await User.findOneAndUpdate({stripeId:userId},
+const updatePaymentStatus = async (customer: string) => {
+  const user = await User.findOneAndUpdate(
+    { stripeId: customer },
     {
       paymentStatus: USER_PAYMENT_STATUS.PAID,
     },

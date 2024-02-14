@@ -24,20 +24,17 @@ const stripeWebhook = async (req: Request, res: Response) => {
       console.error();
     }
     event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-    console.log({ event, signature });
     switch (event.type) {
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object;
-        console.log("Payment succesful", {paymentIntent});
-        // await updatePaymentStatus()s
-        // Fulfill the order
+        console.log("Payment succesful", {customer: paymentIntent.customer});
+        await updatePaymentStatus(`${paymentIntent.customer}`)
         break;
       case "payment_intent.payment_failed":
         const paymentFailedIntent = event.data.object;
         // I would normally Notify the customer that their payment has failed
         console.error("payment failed", paymentFailedIntent);
         break;
-      // Handle other event types as needed
       default:
         console.log(`Unhandled event type ${event.type}`);
     }

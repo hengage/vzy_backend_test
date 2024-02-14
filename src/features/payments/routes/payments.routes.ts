@@ -1,8 +1,7 @@
-import express, { Router } from "express";
+import { Router } from "express";
 
 import { authMiddleware } from "../../../middleware";
 import { createPaymentsIntentController } from "../payments.controller";
-import { stripeWebhook } from "../webhook";
 
 class PaymentsRoutes {
   public router = Router();
