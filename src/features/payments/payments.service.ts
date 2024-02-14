@@ -54,6 +54,11 @@ class PaymentsService {
         customer: user?.stripeId,
         description: "Payment for your product/service",
         payment_method: "pm_card_visa",
+        automatic_payment_methods: {
+          allow_redirects: "never",
+          enabled: true,
+        },
+        confirm: true,
       });
 
       return paymentIntent;
