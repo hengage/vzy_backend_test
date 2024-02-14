@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { generateJWTToken, handleErrorResponse } from "../../utils";
 import {
+  getUserProfileRepo,
   loginRepo,
   updateProfileRepo,
   userRegistrationRepo,
@@ -50,6 +51,20 @@ const loginController = async (req: Request, res: Response) => {
   }
 };
 
+const getUserProfileController = async (req: Request, res: Response) => {
+  const userid = (req as any).user._id;
+
+  try {
+    const user = await getUserProfileRepo(userid);
+    res.status(HTTP_STATUS_CODES.OK).json({
+      success: true,
+      data: { user },
+    });
+  } catch (error: any) {
+    handleErrorResponse(res, false, error);
+  }
+};
+
 const updateProfileController = async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
   try {
@@ -65,4 +80,9 @@ const updateProfileController = async (req: Request, res: Response) => {
   }
 };
 
-export { userRegistrationController, loginController, updateProfileController };
+export {
+  userRegistrationController,
+  loginController,
+  updateProfileController,
+  getUserProfileController,
+};

@@ -48,6 +48,14 @@ const loginRepo = async (payload: { email: string; password: string }) => {
   }
 };
 
+const getUserProfileRepo = async (userId: string) => {
+  const user = await User.findById(userId)
+    .select("firstName lastName phoneNumber email paymentStatus")
+    .lean();
+
+  return user;
+};
+
 const updateProfileRepo = async (
   userId: string,
   payload: Partial<IUserDocument>
@@ -98,4 +106,5 @@ export {
   updateProfileRepo,
   addStripeId,
   updatePaymentStatus,
+  getUserProfileRepo,
 };

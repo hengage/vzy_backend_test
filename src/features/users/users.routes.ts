@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getUserProfileController,
   loginController,
   updateProfileController,
   userRegistrationController,
@@ -18,6 +19,7 @@ class UsersRoutes {
     this.router.post("/login", loginController);
 
     this.router.use(authMiddleware);
+    this.router.route("/").get(getUserProfileController);
     this.router.patch("/", updateProfileController);
   }
 }
