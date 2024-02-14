@@ -12,10 +12,11 @@ class PaymentsRoutes {
   }
 
   private initializeRoutes() {
+    this.router.post(`/webhook`, stripeWebhook);
+
     this.router.use(authMiddleware);
 
     this.router.post(`/payment-intent`, createPaymentsIntentController);
-    this.router.post(`/webhook`, stripeWebhook);
   }
 }
 
