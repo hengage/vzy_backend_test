@@ -2,7 +2,7 @@
   "name": "vzy_test",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "test": "",
     "dev-start": "nodemon --watch api/server.ts",

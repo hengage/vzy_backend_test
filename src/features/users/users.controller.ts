@@ -40,7 +40,7 @@ const loginController = async (req: Request, res: Response) => {
 
     const user = await loginRepo(req.body);
     const jwtPayload = { _id: user._id };
-    const accessToken = generateJWTToken(jwtPayload, "1h");
+    const accessToken = generateJWTToken(jwtPayload, "1m");
 
     res.status(HTTP_STATUS_CODES.OK).json({
       success: true,
